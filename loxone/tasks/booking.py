@@ -8,7 +8,7 @@ logger = frappe.logger("loxone")
 
 @frappe.whitelist()
 def sync_loxone_access():
-    logger.info("Starting sync_loxone_access task")
+    logger.info("Booking - Starting sync_loxone_access task")
 
     sql = """
         -- Selection of confirmed events that have not yet finished (with a 5-minute buffer)
@@ -85,7 +85,7 @@ def sync_loxone_access():
     rows = cast(list[dict], frappe.db.sql(sql, as_dict=True))
 
     for row in rows:
-        logger.debug("Processing row: %s", row)
+        logger.debug("Booking - Processing row: %s", row)
         
         doc = LoxoneUser.get_doc(row['user_name'])
 
@@ -119,7 +119,7 @@ def sync_loxone_access():
             hasChanged = True
 
         if hasChanged:
-            logger.info("Access changes detected for user: %s", doc.name)
+            logger.info("Booking - Access changes detected for user: %s", doc.name)
             doc.flags.triggered_by_loxone = True
             doc.save()
             save_user_in_miniserver(doc)

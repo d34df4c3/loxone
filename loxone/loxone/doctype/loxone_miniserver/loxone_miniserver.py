@@ -41,6 +41,7 @@ class LoxoneMiniserver(Document):
 	def before_validate(self) -> None:	
 		if getattr(self.flags, 'in_insert', False):
 			self.on_update_url()
+			self.name = self.lx_name
 			return
 
 		old_doc = cast('LoxoneMiniserver', self.get_doc_before_save())
@@ -53,7 +54,7 @@ class LoxoneMiniserver(Document):
 
 	def on_trash(self):
 		"""Handle cleanup when the Miniserver document is deleted."""
-		logger.info(f"Deleting Miniserver: {self.lx_name} ({self.name})")
+		logger.info(f"Miniserver - Deleting Miniserver: {self.lx_name} ({self.name})")
 
 		# Delete LoxoneUser
 		import loxone.loxone.doctype.loxone_user.loxone_user as loxone_user
@@ -117,7 +118,7 @@ def validate_connectivity(url: str, user: str, password: str) -> str:
 
 def validate_serial(doc: LoxoneMiniserver, old_doc: LoxoneMiniserver | None) -> None:
 	# If this is a new Miniserver, we need to check if the serial number is unique.
-	if old_doc is None and frappe.db.exists("Miniserver", {"lx_serial": doc.lx_serial}):
+	if old_doc is None and frappe.db.exists("Loxone Miniserver", {"lx_serial": doc.lx_serial}):
 		frappe.throw(
 			title="Duplicate Serial Number",
 			msg=f"A Miniserver with serial '{doc.lx_serial}' already exists."

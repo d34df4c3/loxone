@@ -8,14 +8,14 @@ from frappe.core.doctype.user.user import User
 from typing import cast
 
 def after_insert(doc, method=None):
-    logger.info(f"Preparing to insert user")
+    logger.info(f"User - Preparing to insert user to MiniServer(s) for user {doc.name}")
 
-    ms_names = frappe.get_all("Miniserver", filters={"lx_auto_create_user": True}, pluck="name")
+    ms_names = frappe.get_all("Loxone Miniserver", filters={"lx_auto_create_user": True}, pluck="name")
     for ms_name in ms_names:
         create_user(doc, LoxoneMiniserver.get_doc(ms_name))
 
 def on_trash(doc, method=None):
-    logger.info(f"User {doc.name} is being deleted, removing from Loxone Miniserver")
+    logger.info(f"User - User {doc.name} is being deleted, removing from Loxone Miniserver")
 
     lx_users = frappe.get_all("Loxone User", filters={"lx_dokos_user": doc.name}, pluck="name")
     for lx_user_name in lx_users:
@@ -25,7 +25,7 @@ def on_trash(doc, method=None):
 def create_user(doc: User, ms_doc: LoxoneMiniserver) -> None:
     from loxone.loxone.doctype.loxone_user.loxone_user import LoxoneUser
 
-    logger.info(f"Creating Loxone User {doc.name} for Miniserver {ms_doc.lx_name}")
+    logger.info(f"User - Creating Loxone User {doc.name} for Miniserver {ms_doc.lx_name}")
 
     # Create a new Loxone User document
     lx_user_doc = cast(LoxoneUser, frappe.new_doc("Loxone User"))
@@ -43,7 +43,7 @@ def create_user(doc: User, ms_doc: LoxoneMiniserver) -> None:
         filters={"lx_miniserver": ms_doc.name, "lx_auto_assign": True},
         pluck="name")
 
-    logger.info(f"Assigning Loxone User {doc.name} to default groups: {default_groups}")
+    logger.info(f"User - Assigning Loxone User {doc.name} to default groups: {default_groups}")
     for group_name in default_groups:
         lx_user_doc.append("lx_groups", {"lx_group_id": group_name})
 
