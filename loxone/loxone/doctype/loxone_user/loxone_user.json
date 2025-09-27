@@ -21,7 +21,6 @@
   "lx_valid_until",
   "lx_section_auth",
   "lx_keycode",
-  "lx_nfc_tags",
   "lx_section_group",
   "lx_groups"
  ],
@@ -99,12 +98,6 @@
    "label": "Authentication"
   },
   {
-   "fieldname": "lx_nfc_tags",
-   "fieldtype": "Table",
-   "label": "NFC Tags",
-   "options": "NFC Tag"
-  },
-  {
    "fieldname": "lx_groups",
    "fieldtype": "Table",
    "label": "Groups",
@@ -142,7 +135,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-25 18:49:35.830630",
+ "modified": "2025-09-27 13:55:31.812432",
  "modified_by": "Administrator",
  "module": "Loxone",
  "name": "Loxone User",

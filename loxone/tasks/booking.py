@@ -82,12 +82,12 @@ def sync_loxone_access():
             starts_on ASC
     """
 
-    rows = frappe.db.sql(sql, as_dict=True)
+    rows = cast(list[dict], frappe.db.sql(sql, as_dict=True))
 
     for row in rows:
         logger.debug("Processing row: %s", row)
         
-        doc = LoxoneUser.get_doc(row.get('user_name'))
+        doc = LoxoneUser.get_doc(row['user_name'])
 
         hasChanged = False
 
@@ -96,16 +96,16 @@ def sync_loxone_access():
             doc.lx_state = "4 - Time-Dependent"
             hasChanged = True
 
-        if doc.lx_valid_from != row.get('starts_on'):
-            doc.lx_valid_from = row.get('starts_on')
+        if doc.lx_valid_from != row['starts_on']:
+            doc.lx_valid_from = row['starts_on']
             hasChanged = True
 
-        if doc.lx_valid_until != row.get('ends_on'):
-            doc.lx_valid_until = row.get('ends_on')
+        if doc.lx_valid_until != row['ends_on']:
+            doc.lx_valid_until = row['ends_on']
             hasChanged = True
         
         # Configure groups
-        expected_groups = set(json.loads(row.get('lx_groups')))
+        expected_groups = set(json.loads(row['lx_groups']))
         actual_groups = set(link.lx_group_id for link in doc.lx_groups)
         # Remove all groups not in the expected list
         for child in doc.lx_groups:

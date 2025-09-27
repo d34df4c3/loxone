@@ -21,7 +21,6 @@ class LoxoneUser(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 		from loxone.loxone.doctype.loxone_link_user_group.loxone_link_user_group import LoxoneLinkUserGroup
-		from loxone.loxone.doctype.nfc_tag.nfc_tag import NFCTag
 
 		lx_dokos_user: DF.Link | None
 		lx_groups: DF.Table[LoxoneLinkUserGroup]
@@ -29,7 +28,6 @@ class LoxoneUser(Document):
 		lx_managed_by_dokos: DF.Check
 		lx_miniserver: DF.Link
 		lx_name: DF.Data
-		lx_nfc_tags: DF.Table[NFCTag]
 		lx_state: DF.Literal["0 - Permanent", "1 - Disabled", "2 - Enabled Until", "3 - Enabled From", "4 - Time-Dependent"]
 		lx_uuid: DF.Data
 		lx_valid_from: DF.Datetime | None
