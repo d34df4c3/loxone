@@ -57,7 +57,7 @@ addButton_CheckConnection = function(frm) {
     });
 }
 
-frappe.ui.form.on('Miniserver', {
+frappe.ui.form.on('Loxone Miniserver', {
     refresh: function(frm) {
 
         addButton_CheckConnection(frm);

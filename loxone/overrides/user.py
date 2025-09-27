@@ -2,7 +2,7 @@ from loxone import logger
 
 import frappe
 
-from loxone.loxone.doctype.miniserver.miniserver import Miniserver
+from loxone.loxone.doctype.loxone_miniserver.loxone_miniserver import LoxoneMiniserver
 from frappe.core.doctype.user.user import User
 
 from typing import cast
@@ -12,7 +12,7 @@ def after_insert(doc, method=None):
 
     ms_names = frappe.get_all("Miniserver", filters={"lx_auto_create_user": True}, pluck="name")
     for ms_name in ms_names:
-        create_user(doc, Miniserver.get_doc(ms_name))
+        create_user(doc, LoxoneMiniserver.get_doc(ms_name))
 
 def on_trash(doc, method=None):
     logger.info(f"User {doc.name} is being deleted, removing from Loxone Miniserver")
@@ -22,7 +22,7 @@ def on_trash(doc, method=None):
         lx_user_doc = frappe.get_doc("Loxone User", lx_user_name)
         lx_user_doc.delete()
 
-def create_user(doc: User, ms_doc: Miniserver) -> None:
+def create_user(doc: User, ms_doc: LoxoneMiniserver) -> None:
     from loxone.loxone.doctype.loxone_user.loxone_user import LoxoneUser
 
     logger.info(f"Creating Loxone User {doc.name} for Miniserver {ms_doc.lx_name}")

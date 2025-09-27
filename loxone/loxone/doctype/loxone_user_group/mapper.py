@@ -1,6 +1,6 @@
 import frappe
 
-from loxone.loxone.doctype.miniserver.miniserver import Miniserver
+from loxone.loxone.doctype.loxone_miniserver.loxone_miniserver import LoxoneMiniserver
 from loxone.loxone.doctype.loxone_user_group.loxone_user_group import LoxoneUserGroup
 
 
@@ -11,7 +11,7 @@ class LoxoneUserGroupMapper:
 	Attributes:
 		doc (LoxoneUserGroup): The Loxone User Group document to map data to.
 	"""
-	def __init__(self, doc: LoxoneUserGroup, ms_doc: Miniserver) -> None:
+	def __init__(self, doc: LoxoneUserGroup, ms_doc: LoxoneMiniserver) -> None:
 		"""Initialize the mapper with a Loxone User Group document."""
 		self.doc = doc
 		self.ms_doc = ms_doc

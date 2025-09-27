@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 
 from loxone import logger
-from loxone.loxone.doctype.miniserver.miniserver import Miniserver
+from loxone.loxone.doctype.loxone_miniserver.loxone_miniserver import LoxoneMiniserver
 
 from typing import cast
 from loxone.api.MiniServer import MiniServer
@@ -67,7 +67,7 @@ class LoxoneUser(Document):
 			return
 
 		delete_user_from_miniserver(self)
-		logger.info(f"Deleting Loxone User: {self.lx_name} ({self.name})")
+		logger.info(f"LoxoneUser - Deleting: {self.name}")
 
 	@staticmethod
 	def get_doc(name: str) -> "LoxoneUser":
@@ -75,15 +75,17 @@ class LoxoneUser(Document):
 		return cast(LoxoneUser, frappe.get_doc("Loxone User", name))
 
 
-def load_users_from_miniserver(ms_doc: Miniserver) -> None:
+def load_users_from_miniserver(ms_doc: LoxoneMiniserver) -> None:
 	"""Load users from the MiniServer and create/update LoxoneUser documents."""
+	logger.info(f"LoxoneUser - Loading users from MiniServer: {ms_doc.name}")
+
 	ms = ms_doc.get_miniserver()
 	users = ms.get_users()
 
 	# Create/Update existing users
 	for user in users:
 		if user.get('isAdmin', False):
-			logger.info(f"Skipping admin user: {user['name']}")
+			logger.info(f"LoxoneUser - Skipping admin user: {user['name']}")
 			continue
 
 		user_details = ms.get_user(user['uuid'])
@@ -106,30 +108,32 @@ def load_users_from_miniserver(ms_doc: Miniserver) -> None:
 		doc = LoxoneUser.get_doc(doc_name)
 		doc.flags.triggered_by_loxone = True
 		doc.delete()
-		logger.info(f"Deleted Loxone User: {doc.lx_name} ({doc.name})")	
+		logger.info(f"LoxoneUser - Deleted user: {doc.lx_name} ({doc.name})")	
 
-def create_user_from_miniserver(ms_doc: Miniserver, user_details: dict) -> None:
+def create_user_from_miniserver(ms_doc: LoxoneMiniserver, user_details: dict) -> None:
 	from loxone.loxone.doctype.loxone_user.mapper import LoxoneUserMapper
 
+	logger.debug(f"LoxoneUser - Creating user: {user_details}")
 	doc = cast(LoxoneUser, frappe.new_doc("Loxone User"))
 	doc.flags.triggered_by_loxone = True
 	doc.lx_managed_by_dokos = 0
 	LoxoneUserMapper(doc, ms_doc).load(user_details)
 	doc.insert()
-	logger.info(f"Loxone User - New user: {doc.lx_name}")
+	logger.info(f"LoxoneUser - New user: {doc.lx_name}")
 
-def update_user_from_miniserver(ms_doc: Miniserver, user_doc_name: str, user_details: dict) -> None:
+def update_user_from_miniserver(ms_doc: LoxoneMiniserver, user_doc_name: str, user_details: dict) -> None:
 	from loxone.loxone.doctype.loxone_user.mapper import LoxoneUserMapper
 
+	logger.debug(f"LoxoneUser - Updating user: {user_details}")
 	doc = LoxoneUser.get_doc(user_doc_name)
 	doc.flags.triggered_by_loxone = True
 	LoxoneUserMapper(doc, ms_doc).load(user_details)
 	doc.save()
-	logger.info(f"Loxone User - Updated user: {doc.lx_name}")
+	logger.info(f"LoxoneUser - Updated user: {doc.lx_name}")
 
 def create_user_in_miniserver(doc: LoxoneUser) -> None:
 	# Create user on Miniserver
-	ms_doc = Miniserver.get_doc(doc.lx_miniserver)
+	ms_doc = LoxoneMiniserver.get_doc(doc.lx_miniserver)
 	ms = ms_doc.get_miniserver()
 	uuid = ms.create_user(doc.lx_name)
 	if uuid is None:
@@ -139,12 +143,12 @@ def create_user_in_miniserver(doc: LoxoneUser) -> None:
 	# Ensure user is created and name has not changed, otherwise update the name
 	user_details = ms.get_user(uuid)
 	if user_details['name'] != doc.lx_name:
-		logger.warning(f"Create User - User name mismatch: expected '{doc.lx_name}', got '{user_details['name']}' from Miniserver. Updating Dokos name.")
+		logger.warning(f"LoxoneUser - Create User - User name mismatch: expected '{doc.lx_name}', got '{user_details['name']}' from Miniserver. Updating Dokos name.")
 		doc.lx_name = user_details['name']
 
 	# Assign keycode
 	if ms_doc.lx_auto_assign_keycode:
-		logger.info(f"Assigning keycode to user {doc.lx_name} on Miniserver")
+		logger.info(f"LoxoneUser - Assigning keycode to user {doc.lx_name} on Miniserver")
 		doc.lx_keycode = generate_keycode_in_miniserver(ms, uuid)
 
 def generate_keycode_in_miniserver(ms: MiniServer, uuid: str, attempts: int = 15) -> str:
@@ -167,13 +171,13 @@ def generate_keycode_in_miniserver(ms: MiniServer, uuid: str, attempts: int = 15
 
 		if not success:
 			attempts -= 1
-			logger.warning(f"Keycode {keycode} already exists on Miniserver. Remaining attempts: {attempts}.")
+			logger.warning(f"LoxoneUser - Keycode {keycode} already exists on Miniserver. Remaining attempts: {attempts}.")
 			time.sleep(1)
 		else:
-			logger.info(f"Successfully generated unique keycode {keycode} for user {uuid}.")
+			logger.info(f"LoxoneUser - Successfully generated unique keycode {keycode} for user {uuid}.")
 			return keycode
 
-	logger.error(f"Failed to generate unique keycode for user {uuid} after multiple attempts.")
+	logger.error(f"LoxoneUser - Failed to generate unique keycode for user {uuid} after multiple attempts.")
 	frappe.throw(f"Failed to generate unique keycode for user {uuid} after multiple attempts. Please try again.")
 
 def save_user_in_miniserver(doc: LoxoneUser) -> None:
@@ -181,8 +185,8 @@ def save_user_in_miniserver(doc: LoxoneUser) -> None:
 
 	# Update global fields
 	user_dict = LoxoneUserSerializer(doc).serialize()
-	logger.info(f"Updating Loxone User on Miniserver: {user_dict}")
-	ms = Miniserver.get_doc(doc.lx_miniserver).get_miniserver()
+	logger.info(f"LoxoneUser - Updating Loxone User on Miniserver: {user_dict}")
+	ms = LoxoneMiniserver.get_doc(doc.lx_miniserver).get_miniserver()
 	ms.update_user(user_dict)
 
 	# Sync the user groups
@@ -193,11 +197,11 @@ def save_user_in_miniserver(doc: LoxoneUser) -> None:
 	actual_uuids = [g['uuid'] for g in ms.get_user(doc.lx_uuid).get('usergroups', [])]
 
 	for group_uuid in set(actual_uuids) - set(expected_uuids):
-		logger.info(f"Removing user group {group_uuid} from user {doc.lx_name} on Miniserver")
+		logger.info(f"LoxoneUser - Removing user group {group_uuid} from user {doc.lx_name} on Miniserver")
 		ms.remove_user_from_group(doc.lx_uuid, group_uuid)
 
 	for group_uuid in set(expected_uuids) - set(actual_uuids):
-		logger.info(f"Adding user group {group_uuid} to user {doc.lx_name} on Miniserver")
+		logger.info(f"LoxoneUser - Adding user group {group_uuid} to user {doc.lx_name} on Miniserver")
 		ms.assign_user_to_group(doc.lx_uuid, group_uuid)
 
 def delete_all(ms_name: str) -> None:
@@ -207,9 +211,9 @@ def delete_all(ms_name: str) -> None:
 		user_doc = LoxoneUser.get_doc(user.name)
 		user_doc.flags.triggered_by_loxone = True
 		user_doc.delete()
-		logger.info(f"Deleted Loxone User: {user_doc.lx_name} ({user_doc.name})")
+		logger.info(f"LoxoneUser - Deleted: {user_doc.lx_name} ({user_doc.name})")
 
 def delete_user_from_miniserver(doc: LoxoneUser) -> None:
 	"""Delete the Loxone User from the MiniServer."""
-	ms = Miniserver.get_doc(doc.lx_miniserver).get_miniserver()
+	ms = LoxoneMiniserver.get_doc(doc.lx_miniserver).get_miniserver()
 	ms.delete_user(doc.lx_uuid)

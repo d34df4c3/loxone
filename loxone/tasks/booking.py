@@ -1,10 +1,10 @@
-from loxone import logger
-
 import frappe
 
 from typing import cast
 from loxone.loxone.doctype.loxone_user.loxone_user import LoxoneUser, save_user_in_miniserver
 import json
+
+logger = frappe.logger("loxone")
 
 @frappe.whitelist()
 def sync_loxone_access():

@@ -9,7 +9,7 @@ from loxone import logger
 import frappe
 from typing import cast
 
-class Miniserver(Document):
+class LoxoneMiniserver(Document):
 	# begin: auto-generated types
 	# ruff: noqa
 
@@ -43,12 +43,12 @@ class Miniserver(Document):
 			self.on_update_url()
 			return
 
-		old_doc = cast('Miniserver', self.get_doc_before_save())
+		old_doc = cast('LoxoneMiniserver', self.get_doc_before_save())
 		if old_doc.lx_conn_url != self.lx_conn_url:
 			self.on_update_url()
 
 	def validate(self):
-		old_doc = cast('Miniserver', self.get_doc_before_save())
+		old_doc = cast('LoxoneMiniserver', self.get_doc_before_save())
 		validate_serial(self, old_doc)
 
 	def on_trash(self):
@@ -62,10 +62,6 @@ class Miniserver(Document):
 		# Delete LoxoneGroup
 		import loxone.loxone.doctype.loxone_user_group.loxone_user_group as loxone_user_group
 		loxone_user_group.delete_all(self.name) # type: ignore
-
-		# Delete NFC Code Touch Device
-		import loxone.loxone.doctype.nfc_code_touch_device.nfc_code_touch_device as nfc_code_touch_device
-		nfc_code_touch_device.delete_all(self.name) # type: ignore
 
 	def on_update_url(self) -> None:
 		"""Update the URL of the Miniserver."""
@@ -96,9 +92,9 @@ class Miniserver(Document):
 		return ms
 	
 	@staticmethod
-	def get_doc(name: str) -> "Miniserver":
-		"""Get a Miniserver document by name."""
-		return cast(Miniserver, frappe.get_doc("Miniserver", name))
+	def get_doc(name: str) -> "LoxoneMiniserver":
+		"""Get a LoxoneMiniserver document by name."""
+		return cast(LoxoneMiniserver, frappe.get_doc("Loxone Miniserver", name))
 
 
 def validate_url(url: str) -> None:
@@ -119,7 +115,7 @@ def validate_connectivity(url: str, user: str, password: str) -> str:
     return MiniServer.get_instance(url, user, password).get_status()
 
 
-def validate_serial(doc: Miniserver, old_doc: Miniserver | None) -> None:
+def validate_serial(doc: LoxoneMiniserver, old_doc: LoxoneMiniserver | None) -> None:
 	# If this is a new Miniserver, we need to check if the serial number is unique.
 	if old_doc is None and frappe.db.exists("Miniserver", {"lx_serial": doc.lx_serial}):
 		frappe.throw(
@@ -133,28 +129,3 @@ def validate_serial(doc: Miniserver, old_doc: Miniserver | None) -> None:
 			title="Serial Number Change",
 			msg=f"Cannot change the serial number of a Miniserver. Old: {old_doc.lx_serial}, New: {doc.lx_serial}"
 		)
-
-def create_or_update_devices(ms_doc: Miniserver) -> None:
-	"""Create or update devices based on the MiniServer configuration."""
-
-	create_or_update_nfc_code_touch_devices(ms_doc)
-	nfcs = ms_doc.get_miniserver(True).get_nfc_code_touches()
-	msg = f"Devices detected: {len(nfcs)} NFC Code Touch devices:" \
-		"<ul>" + \
-		"".join([f"<li>{nfc.name} ({nfc.uuid})</li>" for nfc in nfcs]) + \
-		"</ul>" + \
-		f"Please check the NFC Code Touch devices at <a href='/app/nfc-code-touch-device/'>NFC Code Touch Device</a>."
-
-	frappe.msgprint(
-		title="MiniServer Devices Updated",
-		msg=msg,
-		indicator="green"
-	)
-
-def create_or_update_nfc_code_touch_devices(ms_doc: Miniserver) -> None:
-	"""Create or update NFC Code Touch devices based on the MiniServer configuration."""
-	from loxone.loxone.doctype.nfc_code_touch_device.nfc_code_touch_device import NFCCodeTouchDevice
-
-	for nfc in ms_doc.get_miniserver(True).get_nfc_code_touches():
-		NFCCodeTouchDevice.create_or_update(ms_doc, nfc)
-	

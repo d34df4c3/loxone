@@ -42,7 +42,7 @@
    "in_list_view": 1,
    "label": "Miniserver",
    "not_nullable": 1,
-   "options": "Miniserver",
+   "options": "Loxone Miniserver",
    "reqd": 1,
    "search_index": 1
   },
@@ -135,7 +135,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-27 13:55:31.812432",
+ "modified": "2025-09-27 16:29:48.854674",
  "modified_by": "Administrator",
  "module": "Loxone",
  "name": "Loxone User",

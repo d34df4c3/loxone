@@ -1,7 +1,7 @@
 import frappe
 
 from loxone import logger
-from loxone.loxone.doctype.miniserver.miniserver import Miniserver
+from loxone.loxone.doctype.loxone_miniserver.loxone_miniserver import LoxoneMiniserver
 from loxone.loxone.doctype.loxone_user.loxone_user import LoxoneUser
 
 from datetime import datetime, timezone
@@ -63,7 +63,7 @@ class LoxoneUserMapper:
 
     state: State
 
-    def __init__(self, doc: LoxoneUser, ms_doc: Miniserver):
+    def __init__(self, doc: LoxoneUser, ms_doc: LoxoneMiniserver):
         self.doc = doc
         self.ms_doc = ms_doc
 
@@ -118,20 +118,20 @@ class LoxoneUserMapper:
         self.doc.lx_state = self.state.to_string() # type: ignore[assignment]
 
     def load_valid_from(self, data) -> None:
-        if self.state not in [State.ENABLED_FROM, State.TIME_DEPENDENT]:
+        if self.state not in [State.ENABLED_FROM.value, State.TIME_DEPENDENT.value]:
             return
         if 'validFrom' not in data:
             frappe.throw("Loxone User valid from date not found in data.")
 
-        self.doc.lx_valid_from = datetime.fromtimestamp(data['validFrom'], tz=timezone.utc).isoformat(timespec='seconds')
+        self.doc.lx_valid_from = datetime.fromtimestamp(data['validFrom'], tz=timezone.utc).replace(tzinfo=None)
 
     def load_valid_until(self, data) -> None:
-        if self.state not in [State.ENABLED_UNTIL, State.TIME_DEPENDENT]:
+        if self.state not in [State.ENABLED_UNTIL.value, State.TIME_DEPENDENT.value]:
             return
         if 'validUntil' not in data:
             frappe.throw("Loxone User valid until date not found in data.")
 
-        self.doc.lx_valid_until = datetime.fromtimestamp(data['validUntil'], tz=timezone.utc).isoformat(timespec='seconds')
+        self.doc.lx_valid_until = datetime.fromtimestamp(data['validUntil'], tz=timezone.utc).replace(tzinfo=None)
 
     def load_user_groups(self, data) -> None:
         if 'usergroups' not in data:

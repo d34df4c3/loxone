@@ -43,7 +43,7 @@
    "fieldtype": "Link",
    "label": "Assigned to Miniserver",
    "not_nullable": 1,
-   "options": "Miniserver",
+   "options": "Loxone Miniserver",
    "read_only": 1,
    "reqd": 1,
    "search_index": 1
@@ -91,7 +91,7 @@
    "link_fieldname": "lx_group_id"
   }
  ],
- "modified": "2025-09-25 19:35:34.505628",
+ "modified": "2025-09-27 16:29:48.080780",
  "modified_by": "Administrator",
  "module": "Loxone",
  "name": "Loxone User Group",

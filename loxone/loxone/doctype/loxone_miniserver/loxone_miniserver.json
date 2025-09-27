@@ -166,10 +166,10 @@
    "link_fieldname": "lx_miniserver"
   }
  ],
- "modified": "2025-09-25 18:33:47.903765",
+ "modified": "2025-09-27 16:37:58.022619",
  "modified_by": "Administrator",
  "module": "Loxone",
- "name": "Miniserver",
+ "name": "Loxone Miniserver",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
