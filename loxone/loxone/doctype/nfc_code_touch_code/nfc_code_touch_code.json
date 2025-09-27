@@ -1,0 +1,195 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:CODE-{#####}",
+ "creation": "2025-06-26 18:19:06.508668",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_prop",
+  "lx_uuid",
+  "lx_name",
+  "lx_nfc_device",
+  "column_break_prop",
+  "lx_code",
+  "lx_user",
+  "lx_managed_by_dokos",
+  "section_time",
+  "lx_type",
+  "column_break_time",
+  "lx_time_from",
+  "lx_time_to",
+  "lx_section_out",
+  "lx_output_1",
+  "lx_output_2",
+  "lx_output_3",
+  "lx_output_4",
+  "lx_output_5",
+  "lx_output_6",
+  "column_break_out",
+  "lx_default_output"
+ ],
+ "fields": [
+  {
+   "fieldname": "lx_uuid",
+   "fieldtype": "Data",
+   "label": "Identifier",
+   "not_nullable": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "lx_name",
+   "fieldtype": "Data",
+   "label": "Name",
+   "not_nullable": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "lx_code",
+   "fieldtype": "Data",
+   "label": "Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "lx_type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "0 - Permanent\n1 - One-Time\n2 - Time-Dependent\n3 - Valid Until\n4 - Valid From\n5 - Deactivated",
+   "reqd": 1
+  },
+  {
+   "description": "Define the outputs this code is allowed to activate",
+   "fieldname": "lx_section_out",
+   "fieldtype": "Section Break",
+   "label": "Output Configuration"
+  },
+  {
+   "default": "0",
+   "fieldname": "lx_output_1",
+   "fieldtype": "Check",
+   "label": "Grant access to output 1"
+  },
+  {
+   "default": "0",
+   "fieldname": "lx_output_2",
+   "fieldtype": "Check",
+   "label": "Grant access to output 2"
+  },
+  {
+   "default": "0",
+   "fieldname": "lx_output_3",
+   "fieldtype": "Check",
+   "label": "Grant access to output 3"
+  },
+  {
+   "default": "0",
+   "fieldname": "lx_output_4",
+   "fieldtype": "Check",
+   "label": "Grant access to output 4"
+  },
+  {
+   "default": "0",
+   "fieldname": "lx_output_5",
+   "fieldtype": "Check",
+   "label": "Grant access to output 5"
+  },
+  {
+   "default": "0",
+   "fieldname": "lx_output_6",
+   "fieldtype": "Check",
+   "label": "Grant access to output 6"
+  },
+  {
+   "default": "Output 1",
+   "description": "Define the default output to trigger when code is inputted",
+   "fieldname": "lx_default_output",
+   "fieldtype": "Select",
+   "label": "Default Output",
+   "options": "Output 1\nOutput 2\nOutput 3\nOutput 4\nOutput 5\nOutput 6",
+   "reqd": 1
+  },
+  {
+   "fieldname": "lx_user",
+   "fieldtype": "Link",
+   "label": "Assigned To",
+   "options": "User"
+  },
+  {
+   "depends_on": "eval:doc.lx_type.startsWith('2') || doc.lx_type.startsWith('4')",
+   "fieldname": "lx_time_from",
+   "fieldtype": "Datetime",
+   "label": "Valid From"
+  },
+  {
+   "depends_on": "eval:doc.lx_type.startsWith('2') || doc.lx_type.startsWith('3')",
+   "fieldname": "lx_time_to",
+   "fieldtype": "Datetime",
+   "label": "Valid Until"
+  },
+  {
+   "fieldname": "section_prop",
+   "fieldtype": "Section Break",
+   "label": "Properties"
+  },
+  {
+   "fieldname": "column_break_prop",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_time",
+   "fieldtype": "Section Break",
+   "label": "Time Settings"
+  },
+  {
+   "fieldname": "column_break_time",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_out",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lx_nfc_device",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Attached To",
+   "not_nullable": 1,
+   "options": "NFC Code Touch Device",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "description": "Code managed by Dokos can be updated and/or deleted. <br>Any other code detected on Miniserver will remain untouched.",
+   "fieldname": "lx_managed_by_dokos",
+   "fieldtype": "Check",
+   "label": "Managed by Dokos",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-07-26 11:08:41.684805",
+ "modified_by": "Administrator",
+ "module": "Loxone",
+ "name": "NFC Code Touch Code",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

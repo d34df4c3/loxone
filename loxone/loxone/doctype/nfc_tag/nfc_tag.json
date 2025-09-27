@@ -1,0 +1,49 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:NFC-{#####}",
+ "creation": "2025-07-19 11:39:22.377540",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "lx_section",
+  "lx_name",
+  "lx_value"
+ ],
+ "fields": [
+  {
+   "fieldname": "lx_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "lx_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tag Name",
+   "not_nullable": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "lx_value",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tag Value",
+   "not_nullable": 1,
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-07-21 19:25:16.692997",
+ "modified_by": "Administrator",
+ "module": "Loxone",
+ "name": "NFC Tag",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

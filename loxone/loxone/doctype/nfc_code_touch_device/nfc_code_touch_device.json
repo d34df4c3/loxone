@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:NFC.{#####}",
+ "creation": "2025-06-26 19:47:41.985365",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_prop",
+  "lx_uuid",
+  "lx_name",
+  "lx_miniserver"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_prop",
+   "fieldtype": "Section Break",
+   "label": "Properties"
+  },
+  {
+   "fieldname": "lx_uuid",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Identifier",
+   "not_nullable": 1,
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "lx_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name",
+   "not_nullable": 1,
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "lx_miniserver",
+   "fieldtype": "Link",
+   "label": "Assigned to Miniserver",
+   "not_nullable": 1,
+   "options": "Miniserver",
+   "read_only": 1,
+   "reqd": 1
+  }
+ ],
+ "in_create": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-07-26 10:58:18.005240",
+ "modified_by": "Administrator",
+ "module": "Loxone",
+ "name": "NFC Code Touch Device",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "lx_name",
+ "sort_order": "ASC",
+ "states": []
+}

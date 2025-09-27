@@ -1,0 +1,41 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:LNK-UG-{#####}",
+ "creation": "2025-07-19 12:13:17.868099",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "lx_section",
+  "lx_group_id"
+ ],
+ "fields": [
+  {
+   "fieldname": "lx_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "lx_group_id",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Loxone Group",
+   "not_nullable": 1,
+   "options": "Loxone User Group",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-07-22 20:38:40.106004",
+ "modified_by": "Administrator",
+ "module": "Loxone",
+ "name": "Loxone Link User-Group",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,118 @@
+{
+ "actions": [],
+ "autoname": "format:{lx_miniserver}/{lx_name}",
+ "creation": "2025-07-19 11:53:11.530650",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "lx_section_prop",
+  "column_break_pejs",
+  "lx_uuid",
+  "lx_name",
+  "lx_description",
+  "lx_section_dokos",
+  "lx_miniserver",
+  "lx_auto_assign",
+  "lx_section_resource",
+  "lx_booking_resources"
+ ],
+ "fields": [
+  {
+   "fieldname": "lx_uuid",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Identifier (UUID)",
+   "not_nullable": 1,
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "lx_name",
+   "fieldtype": "Data",
+   "label": "Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "lx_description",
+   "fieldtype": "Data",
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "lx_miniserver",
+   "fieldtype": "Link",
+   "label": "Assigned to Miniserver",
+   "not_nullable": 1,
+   "options": "Miniserver",
+   "read_only": 1,
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "lx_section_prop",
+   "fieldtype": "Section Break",
+   "label": "Properties"
+  },
+  {
+   "description": "Values are automatically loaded from the Miniserver.",
+   "fieldname": "column_break_pejs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lx_section_dokos",
+   "fieldtype": "Section Break",
+   "label": "Dokos Integration"
+  },
+  {
+   "default": "0",
+   "description": "When enabled, new users will be automatically assigned to this group upon creation.",
+   "fieldname": "lx_auto_assign",
+   "fieldtype": "Check",
+   "label": "Assign new users to this group by default"
+  },
+  {
+   "description": "Define which resources are connected to this Loxone Group. Users who make bookings for any listed resource will automatically inherit the group's access privileges during their booking period.",
+   "fieldname": "lx_section_resource",
+   "fieldtype": "Section Break",
+   "label": "Booking Resources"
+  },
+  {
+   "fieldname": "lx_booking_resources",
+   "fieldtype": "Table",
+   "label": "Resources",
+   "options": "Loxone Link Group-BookingResource"
+  }
+ ],
+ "in_create": 1,
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Loxone User",
+   "link_fieldname": "lx_group_id"
+  }
+ ],
+ "modified": "2025-09-25 19:35:34.505628",
+ "modified_by": "Administrator",
+ "module": "Loxone",
+ "name": "Loxone User Group",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

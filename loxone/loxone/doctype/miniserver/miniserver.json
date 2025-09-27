@@ -1,0 +1,193 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{lx_name}",
+ "creation": "2025-06-26 17:59:58.113355",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "settings_tab",
+  "lx_section_conn",
+  "lx_conn_url",
+  "column_break_xfgo",
+  "lx_conn_user",
+  "lx_conn_password",
+  "lx_section_dokos",
+  "lx_auto_create_user",
+  "lx_auto_assign_keycode",
+  "column_break_thwp",
+  "lx_auto_enable_user",
+  "loxone_config_tab",
+  "lx_section_prop",
+  "lx_name",
+  "column_break_iqkw",
+  "lx_serial",
+  "section_loxapp3",
+  "column_break_ofnx",
+  "lx_loxapp3_dt",
+  "lx_loxapp3"
+ ],
+ "fields": [
+  {
+   "fieldname": "lx_section_conn",
+   "fieldtype": "Section Break",
+   "label": "Connection Settings"
+  },
+  {
+   "description": "URL of the Loxone API endpoint",
+   "fieldname": "lx_conn_url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "URL",
+   "not_nullable": 1,
+   "placeholder": "http://",
+   "reqd": 1
+  },
+  {
+   "description": "Loxone user with API permissions",
+   "fieldname": "lx_conn_user",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "User",
+   "not_nullable": 1,
+   "reqd": 1
+  },
+  {
+   "description": "Password of the Loxone user",
+   "fieldname": "lx_conn_password",
+   "fieldtype": "Data",
+   "label": "Password",
+   "not_nullable": 1,
+   "reqd": 1
+  },
+  {
+   "description": "Values are automatically loaded from the Miniserver.",
+   "fieldname": "lx_section_prop",
+   "fieldtype": "Section Break",
+   "label": "Properties"
+  },
+  {
+   "fieldname": "lx_serial",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Serial Number",
+   "not_nullable": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "lx_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name",
+   "not_nullable": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_loxapp3",
+   "fieldtype": "Section Break",
+   "label": "Miniserver Configuration"
+  },
+  {
+   "fieldname": "column_break_ofnx",
+   "fieldtype": "Column Break",
+   "read_only": 1
+  },
+  {
+   "fieldname": "lx_loxapp3_dt",
+   "fieldtype": "Datetime",
+   "label": "Last Refresh",
+   "read_only": 1
+  },
+  {
+   "fieldname": "lx_loxapp3",
+   "fieldtype": "JSON",
+   "label": "Structured File (LoxAPP3.json)",
+   "not_nullable": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xfgo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lx_section_dokos",
+   "fieldtype": "Section Break",
+   "label": "Dokos Integration"
+  },
+  {
+   "default": "0",
+   "description": "When enabled, a corresponding Loxone user will be automatically created on this Miniserver whenever a new Dokos user is added.",
+   "fieldname": "lx_auto_create_user",
+   "fieldtype": "Check",
+   "label": "Automatically create user"
+  },
+  {
+   "default": "0",
+   "description": "When enabled, a keycode will be automatically assigned to the Miniserver user when they are created.",
+   "fieldname": "lx_auto_assign_keycode",
+   "fieldtype": "Check",
+   "label": "Automatically assign keycode"
+  },
+  {
+   "fieldname": "column_break_iqkw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_thwp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.lx_auto_create_user == 1",
+   "description": "When enabled, the Loxone user will be active by default upon creation. If unchecked, the user will be created in a disabled state.",
+   "fieldname": "lx_auto_enable_user",
+   "fieldtype": "Check",
+   "label": "Enable user by default"
+  },
+  {
+   "fieldname": "settings_tab",
+   "fieldtype": "Tab Break",
+   "label": "Settings"
+  },
+  {
+   "fieldname": "loxone_config_tab",
+   "fieldtype": "Tab Break",
+   "label": "Loxone Config"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Loxone User Group",
+   "link_fieldname": "lx_miniserver"
+  },
+  {
+   "link_doctype": "Loxone User",
+   "link_fieldname": "lx_miniserver"
+  }
+ ],
+ "modified": "2025-09-25 18:33:47.903765",
+ "modified_by": "Administrator",
+ "module": "Loxone",
+ "name": "Miniserver",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
