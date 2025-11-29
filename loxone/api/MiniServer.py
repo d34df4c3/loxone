@@ -1,6 +1,6 @@
 from typing import Optional, overload
 from loxone.api.Control.NfcCodeTouch import NfcCodeTouch
-from loxone.api.ApiClient import ApiClient
+from loxone.api.ApiClient import ApiClient, BasicAuth
 from loxone.api.Control import Control
 from loxone import logger
 import json
@@ -250,7 +250,6 @@ def get_instance(*args, **kwargs) -> MiniServer:
         and isinstance(args[0], str) \
         and isinstance(args[1], str) \
         and isinstance(args[2], str):
-        from ApiClient import BasicAuth
         return MiniServer(cast(ApiClient, BasicAuth(args[0], args[1], args[2])))
 
     raise ValueError("Invalid arguments")
