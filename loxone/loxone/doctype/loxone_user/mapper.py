@@ -12,6 +12,7 @@ from enum import Enum
 
 date_format = '%Y-%m-%d %H:%M:%S'
 brussels_tz = pytz.timezone("Europe/Brussels")
+EPOCH_TO_2009_SECONDS = 1230768000  # seconds
 
 class State(Enum):
     """Enumeration of possible states for a Loxone User.
@@ -118,20 +119,20 @@ class LoxoneUserMapper:
         self.doc.lx_state = self.state.to_string() # type: ignore[assignment]
 
     def load_valid_from(self, data) -> None:
-        if self.state not in [State.ENABLED_FROM.value, State.TIME_DEPENDENT.value]:
+        if self.state not in [State.ENABLED_FROM, State.TIME_DEPENDENT]:
             return
         if 'validFrom' not in data:
             frappe.throw("Loxone User valid from date not found in data.")
 
-        self.doc.lx_valid_from = datetime.fromtimestamp(data['validFrom'], tz=timezone.utc).replace(tzinfo=None)
+        self.doc.lx_valid_from = datetime.fromtimestamp(data['validFrom'] + EPOCH_TO_2009_SECONDS, tz=timezone.utc).replace(tzinfo=None)
 
     def load_valid_until(self, data) -> None:
-        if self.state not in [State.ENABLED_UNTIL.value, State.TIME_DEPENDENT.value]:
+        if self.state not in [State.ENABLED_UNTIL, State.TIME_DEPENDENT]:
             return
         if 'validUntil' not in data:
             frappe.throw("Loxone User valid until date not found in data.")
 
-        self.doc.lx_valid_until = datetime.fromtimestamp(data['validUntil'], tz=timezone.utc).replace(tzinfo=None)
+        self.doc.lx_valid_until = datetime.fromtimestamp(data['validUntil'] + EPOCH_TO_2009_SECONDS, tz=timezone.utc).replace(tzinfo=None)
 
     def load_user_groups(self, data) -> None:
         if 'usergroups' not in data:
@@ -243,4 +244,4 @@ class LoxoneUserSerializer:
         if isinstance(date, str):
             date = brussels_tz.localize(datetime.fromisoformat(date))
 
-        return int(date.timestamp())
+        return int(date.timestamp() - EPOCH_TO_2009_SECONDS)
