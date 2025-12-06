@@ -124,7 +124,7 @@ class LoxoneUserMapper:
         if 'validFrom' not in data:
             frappe.throw("Loxone User valid from date not found in data.")
 
-        self.doc.lx_valid_from = datetime.fromtimestamp(data['validFrom'] + EPOCH_TO_2009_SECONDS, tz=timezone.utc).replace(tzinfo=None)
+        self.doc.lx_valid_from = LoxoneUserMapper.load_date(data['validFrom'])
 
     def load_valid_until(self, data) -> None:
         if self.state not in [State.ENABLED_UNTIL, State.TIME_DEPENDENT]:
@@ -132,7 +132,29 @@ class LoxoneUserMapper:
         if 'validUntil' not in data:
             frappe.throw("Loxone User valid until date not found in data.")
 
-        self.doc.lx_valid_until = datetime.fromtimestamp(data['validUntil'] + EPOCH_TO_2009_SECONDS, tz=timezone.utc).replace(tzinfo=None)
+        self.doc.lx_valid_until = LoxoneUserMapper.load_date(data['validUntil'])
+    
+    @staticmethod
+    def load_date(loxone_epoch: int) -> datetime:
+        """
+        Convert a Loxone timestamp to a naive datetime in Europe/Brussels timezone.
+        
+        Loxone uses a custom epoch starting at 2009-01-01 00:00:00 UTC instead of
+        the standard Unix epoch (1970-01-01 00:00:00 UTC). This function converts
+        the Loxone timestamp to Brussels local time and returns it as a naive datetime
+        (without timezone info) suitable for storing in MySQL DATETIME columns.
+        
+        Args:
+            loxone_epoch (int): Timestamp in seconds since 2009-01-01 00:00:00 UTC
+            
+        Returns:
+            datetime: Naive datetime object in Europe/Brussels timezone (CET/CEST),
+                    suitable for MariaDB DATETIME storage
+        """
+        unix_epoch = loxone_epoch + EPOCH_TO_2009_SECONDS
+        utc_datetime = datetime.fromtimestamp(unix_epoch, tz=timezone.utc)
+        return utc_datetime.astimezone(brussels_tz).replace(tzinfo=None)
+
 
     def load_user_groups(self, data) -> None:
         if 'usergroups' not in data:
@@ -236,12 +258,38 @@ class LoxoneUserSerializer:
         self.user_dict['validUntil'] = LoxoneUserSerializer.serialize_date(self.doc.lx_valid_until)
 
     @staticmethod
-    def serialize_date(date: str |datetime) -> int:
-        """Convert a date string to a timestamp in seconds."""
+    def serialize_date(date: str | datetime) -> int:
+        """
+        Convert a datetime or date string to a Loxone timestamp.
+        
+        Converts a datetime object or ISO format date string to Loxone's custom epoch
+        timestamp (seconds since 2009-01-01 00:00:00 UTC). Input strings are assumed
+        to be in Europe/Brussels timezone (naive) unless already timezone-aware.
+        
+        Args:
+            date (str | datetime): Either an ISO format date string (YYYY-MM-DD HH:MM:SS)
+                                assumed to be in Brussels timezone, or a datetime object
+                                (naive = Brussels, aware = any timezone)
+            
+        Returns:
+            int: Timestamp in seconds since 2009-01-01 00:00:00 UTC (Loxone epoch),
+                or 0 if date is empty/None
+        """
+        # Handle empty/None values
         if not date or date == "":
             return 0
 
+        # Convert string to datetime and localize to Brussels timezone
         if isinstance(date, str):
-            date = brussels_tz.localize(datetime.fromisoformat(date))
-
-        return int(date.timestamp() - EPOCH_TO_2009_SECONDS)
+            naive_datetime = datetime.fromisoformat(date)
+            date = brussels_tz.localize(naive_datetime)
+        
+        # If datetime is naive, assume it's in Brussels timezone
+        elif isinstance(date, datetime) and date.tzinfo is None:
+            date = brussels_tz.localize(date)
+        
+        # Convert to UTC before calculating timestamp (Loxone uses UTC)
+        utc_datetime = date.astimezone(timezone.utc)
+        
+        # Convert to Unix timestamp and subtract the 2009 epoch offset
+        return int(utc_datetime.timestamp() - EPOCH_TO_2009_SECONDS)

@@ -1,4 +1,4 @@
-__version__ = "2025.11.29"
+__version__ = "2025.12.06"
 
 import frappe
 from logging import INFO, DEBUG
