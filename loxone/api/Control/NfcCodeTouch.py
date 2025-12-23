@@ -235,9 +235,9 @@ class Code:
                 f"outputs={self.outputs}, " \
                 f"default_output={self.default_output}"
         if self.time_from:
-            str += f", time_from={self.time_from.astimezone(pytz.timezone("Europe/Brussels")).isoformat()}"
+            str += f", time_from={self.time_from.astimezone(pytz.timezone('Europe/Brussels')).isoformat()}"
         if self.time_to:
-            str += f", time_to={self.time_to.astimezone(pytz.timezone("Europe/Brussels")).isoformat()}"
+            str += f", time_to={self.time_to.astimezone(pytz.timezone('Europe/Brussels')).isoformat()}"
         str += ")"
         return str
 
