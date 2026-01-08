@@ -101,6 +101,11 @@ bench get-app https://github.com/d34df4c3/loxone --branch develop
 bench --site $NAME_OF_YOUR_SITE install-app loxone
 ```
 
+To update the version of the application to the latest available on github:
+```bash
+bench update --apps loxone
+```
+
 ## Configuration
 
 ### In Desk → Loxone Miniserver
